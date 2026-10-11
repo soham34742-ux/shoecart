@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeKart - Step Into Your Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            dark: '#0f172a'
+                        },
+                        accent: {
+                            500: '#f97316',
+                            600: '#ea580c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- React & Babel dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for Admin Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .product-card:hover .product-img { transform: scale(1.06); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const INITIAL_PRODUCTS = [
+            {
+                id: "sk-101",
+                name: "Air Zoom Pegasus 40 Running Shoes",
+                brand: "Nike",
+                category: "Running Shoes",
+                gender: "Men",
+                price: 10495,
+                originalPrice: 13995,
+                discount: 25,
+                rating: 4.6,
+                reviewCount: 1420,
+                sizes: [6, 7, 8, 9, 10, 11],
+                colors: ["Black/White", "Volt Blue", "Pure Platinum"],
+                images: [
+                    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80",
+                    "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 45,
+                isNew: true,
+                isTrending: true,
+                isBestSeller: true,
+                description: "Responsive cushioning in the Pegasus provides an energized ride for everyday road running. Experience lighter-weight energy return with dual Zoom Air units and a React foam midsole."
+            },
+            {
+                id: "sk-102",
+                name: "Ultraboost Light Dynamic Cushioning Shoes",
+                brand: "Adidas",
+                category: "Running Shoes",
+                gender: "Men",
+                price: 11999,
+                originalPrice: 18999,
+                discount: 36,
+                rating: 4.8,
+                reviewCount: 980,
+                sizes: [7, 8, 9, 10, 11],
+                colors: ["Core Black", "Cloud White", "Solar Red"],
+                images: [
+                    "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&auto=format&fit=crop&q=80",
+                    "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 22,
+                isNew: false,
+                isTrending: true,
+                isBestSeller: true,
+                description: "Experience epic energy with the new Ultraboost Light, our lightest Ultraboost ever. The secret lies in the Light BOOST midsole, a new generation of adidas BOOST."
+            },
+            {
+                id: "sk-103",
+                name: "RS-X Efekt Reflective Sneakers",
+                brand: "Puma",
+                category: "Sneakers",
+                gender: "Unisex",
+                price: 5999,
+                originalPrice: 9999,
+                discount: 40,
+                rating: 4.4,
+                reviewCount: 654,
+                sizes: [6, 7, 8, 9, 10],
+                colors: ["White/Royal Blue", "Black/Lime"],
+                images: [
+                    "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&auto=format&fit=crop&q=80",
+                    "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 18,
+                isNew: true,
+                isTrending: true,
+                isBestSeller: false,
+                description: "The RS-X returns for a new generation of consumers who live to express their individuality. Features dynamic mesh upper with angular overlays and bold color blocking."
+            },
+            {
+                id: "sk-104",
+                name: "Classic Leather Unisex Heritage Sneakers",
+                brand: "Reebok",
+                category: "Casual Shoes",
+                gender: "Unisex",
+                price: 3899,
+                originalPrice: 6599,
+                discount: 40,
+                rating: 4.3,
+                reviewCount: 420,
+                sizes: [6, 7, 8, 9, 10, 11],
+                colors: ["White/Gum", "Black"],
+                images: [
+                    "https://images.unsplash.com/photo-1539185441755-769473a23570?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 30,
+                isNew: false,
+                isTrending: false,
+                isBestSeller: true,
+                description: "Never go out of style. Soft garment leather upper gives you instant comfort. Die-cut EVA midsole provides lightweight cushioning."
+            },
+            {
+                id: "sk-105",
+                name: "Go Walk 6 Iconic Comfort Walking Shoes",
+                brand: "Skechers",
+                category: "Walking Shoes",
+                gender: "Women",
+                price: 4499,
+                originalPrice: 6999,
+                discount: 35,
+                rating: 4.7,
+                reviewCount: 1100,
+                sizes: [5, 6, 7, 8, 9],
+                colors: ["Mauve/Navy", "Black/White"],
+                images: [
+                    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 50,
+                isNew: true,
+                isTrending: true,
+                isBestSeller: true,
+                description: "Step up in long-lasting comfort with Skechers Go Walk 6. Features lightweight ULTRA GO cushioning, Air-Cooled Goga Mat insole, and high-rebound Hyper Pillar Technology."
+            },
+            {
+                id: "sk-106",
+                name: "GEL-Kayano 30 Stability Road Running",
+                brand: "Asics",
+                category: "Running Shoes",
+                gender: "Men",
+                price: 12799,
+                originalPrice: 15999,
+                discount: 20,
+                rating: 4.9,
+                reviewCount: 310,
+                sizes: [7, 8, 9, 10, 11, 12],
+                colors: ["Deep Ocean", "Black/Glow"],
+                images: [
+                    "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 12,
+                isNew: true,
+                isTrending: true,
+                isBestSeller: false,
+                description: "From 5Ks to full marathons, the GEL-KAYANO 30 shoe is designed to provide advanced stability and softer cushioning properties."
+            },
+            {
+                id: "sk-107",
+                name: "North Plus Lightweight Breathable Sports Shoe",
+                brand: "Campus",
+                category: "Sports Shoes",
+                gender: "Men",
+                price: 1299,
+                originalPrice: 2199,
+                discount: 40,
+                rating: 4.2,
+                reviewCount: 2300,
+                sizes: [6, 7, 8, 9, 10],
+                colors: ["Grey/Orange", "Navy Blue"],
+                images: [
+                    "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 120,
+                isNew: false,
+                isTrending: true,
+                isBestSeller: true,
+                description: "Designed for everyday workout and running sessions. Features mesh upper for max ventilation and memory foam cushioning for custom comfort."
+            },
+            {
+                id: "sk-108",
+                name: "Genuine Leather Handcrafted Formal Derby",
+                brand: "Bata",
+                category: "Formal Shoes",
+                gender: "Men",
+                price: 2499,
+                originalPrice: 3999,
+                discount: 37,
+                rating: 4.5,
+                reviewCount: 880,
+                sizes: [6, 7, 8, 9, 10, 11],
+                colors: ["Classic Brown", "Midnight Black"],
+                images: [
+                    "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 40,
+                isNew: false,
+                isTrending: false,
+                isBestSeller: true,
+                description: "Refine your formal wardrobe with Bata handcrafted genuine leather Oxford Derby shoes. Cushioned footbed for office-long wearability."
+            },
+            {
+                id: "sk-109",
+                name: "Air Jordan 1 Retro High OG",
+                brand: "Jordan",
+                category: "Sneakers",
+                gender: "Unisex",
+                price: 16995,
+                originalPrice: 19995,
+                discount: 15,
+                rating: 4.9,
+                reviewCount: 3500,
+                sizes: [7, 8, 9, 10, 11],
+                colors: ["Chicago Red", "Shadow Grey"],
+                images: [
+                    "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 8,
+                isNew: true,
+                isTrending: true,
+                isBestSeller: true,
+                description: "The classic sneaker that started it all. Genuine leather upper, encapsulated Air-Sole unit, and rubber outsole for traction."
+            },
+            {
+                id: "sk-110",
+                name: "Chuck Taylor All Star Canvas High-Top",
+                brand: "Converse",
+                category: "Sneakers",
+                gender: "Unisex",
+                price: 3999,
+                originalPrice: 4999,
+                discount: 20,
+                rating: 4.6,
+                reviewCount: 2900,
+                sizes: [4, 5, 6, 7, 8, 9, 10],
+                colors: ["Optical White", "Black Canvas"],
+                images: [
+                    "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 60,
+                isNew: false,
+                isTrending: true,
+                isBestSeller: true,
+                description: "The original basketball sneaker turned lifestyle icon. Lightweight canvas upper with classic star ankle patch."
+            },
+            {
+                id: "sk-111",
+                name: "Heavy Duty Waterproof Hiking Boots",
+                brand: "Woodland",
+                category: "Casual Shoes",
+                gender: "Men",
+                price: 4995,
+                originalPrice: 7495,
+                discount: 33,
+                rating: 4.7,
+                reviewCount: 1540,
+                sizes: [7, 8, 9, 10, 11],
+                colors: ["Khaki Tan", "Camel Brown"],
+                images: [
+                    "https://images.unsplash.com/photo-1520639888713-7851133b1ed0?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 25,
+                isNew: false,
+                isTrending: false,
+                isBestSeller: true,
+                description: "Nubuck leather tough boots engineered for outdoor rugged terrains. Shock absorbent rubber lug sole."
+            },
+            {
+                id: "sk-112",
+                name: "Kids Light-Up Velocity Athletic Shoes",
+                brand: "Sparx",
+                category: "Kids' Shoes",
+                gender: "Kids",
+                price: 1199,
+                originalPrice: 1799,
+                discount: 33,
+                rating: 4.3,
+                reviewCount: 510,
+                sizes: [2, 3, 4, 5],
+                colors: ["Electric Blue", "Neon Pink"],
+                images: [
+                    "https://images.unsplash.com/photo-1514989940723-e8e51635b782?w=600&auto=format&fit=crop&q=80"
+                ],
+                inStock: true,
+                stockCount: 35,
+                isNew: true,
+                isTrending: false,
+                isBestSeller: false,
+                description: "Fun light-up heel cushions for kids! Breathable mesh and easy hook-and-loop strap closure."
+            }
+        ];
+
+        const BRANDS = ["Nike", "Adidas", "Puma", "Reebok", "New Balance", "Skechers", "Asics", "Converse", "Vans", "Jordan", "Campus", "Bata", "Red Tape", "Woodland", "Sparx"];
+        const CATEGORIES = ["All", "Running Shoes", "Walking Shoes", "Sneakers", "Sports Shoes", "Casual Shoes", "Formal Shoes", "Kids' Shoes", "Sandals & Slippers"];
+
+        function App() {
+            // Navigation & Page views: 'home', 'shop', 'product-detail', 'cart', 'checkout', 'account', 'admin', 'tracking'
+            const [view, setView] = React.useState('home');
+            const [products, setProducts] = React.useState(() => {
+                const saved = localStorage.getItem('shoekart_products');
+                return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+            });
+            const [selectedProduct, setSelectedProduct] = React.useState(null);
+            const [quickViewProduct, setQuickViewProduct] = React.useState(null);
+            
+            // Filters State
+            const [searchQuery, setSearchQuery] = React.useState('');
+            const [selectedCategory, setSelectedCategory] = React.useState('All');
+            const [selectedBrand, setSelectedBrand] = React.useState('All');
+            const [selectedGender, setSelectedGender] = React.useState('All');
+            const [priceRange, setPriceRange] = React.useState(20000);
+            const [sortBy, setSortBy] = React.useState('relevance');
+
+            // Shopping Cart & Wishlist State
+            const [cart, setCart] = React.useState(() => {
+                const saved = localStorage.getItem('shoekart_cart');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [wishlist, setWishlist] = React.useState(() => {
+                const saved = localStorage.getItem('shoekart_wishlist');
+                return saved ? JSON.parse(saved) : [];
+            });
+
+            // User & Authentication State
+            const [user, setUser] = React.useState(() => {
+                const saved = localStorage.getItem('shoekart_user');
+                return saved ? JSON.parse(saved) : null;
+            });
+            const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
+            const [notification, setNotification] = React.useState(null);
+
+            // Coupons & Checkout State
+            const [appliedCoupon, setAppliedCoupon] = React.useState(null);
+            const [recentOrder, setRecentOrder] = React.useState(null);
+
+            // Save to LocalStorage effects
+            React.useEffect(() => {
+                localStorage.setItem('shoekart_cart', JSON.stringify(cart));
+            }, [cart]);
+
+            React.useEffect(() => {
+                localStorage.setItem('shoekart_wishlist', JSON.stringify(wishlist));
+            }, [wishlist]);
+
+            React.useEffect(() => {
+                localStorage.setItem('shoekart_products', JSON.stringify(products));
+            }, [products]);
+
+            // Toast Notifications logic
+            const showToast = (message, type = 'info') => {
+                setNotification({ message, type });
+                setTimeout(() => setNotification(null), 3200);
+            };
+
+            // Wishlist toggle
+            const toggleWishlist = (product) => {
+                if (wishlist.some(item => item.id === product.id)) {
+                    setWishlist(wishlist.filter(item => item.id !== product.id));
+                    showToast(`Removed "${product.name}" from Wishlist`, 'info');
+                } else {
+                    setWishlist([...wishlist, product]);
+                    showToast(`Added "${product.name}" to Wishlist!`, 'success');
+                }
+            };
+
+            // Add to Cart
+            const addToCart = (product, size, color, qty = 1) => {
+                if (!size) {
+                    showToast('Please select a shoe size before adding to cart!', 'warning');
+                    return false;
+                }
+                const existingIndex = cart.findIndex(i => i.id === product.id && i.size === size);
+                if (existingIndex > -1) {
+                    const newCart = [...cart];
+                    newCart[existingIndex].quantity += qty;
+                    setCart(newCart);
+                } else {
+                    setCart([...cart, { ...product, size, selectedColor: color || product.colors[0], quantity: qty }]);
+                }
+                showToast(`Added ${product.name} (UK ${size}) to Cart!`, 'success');
+                return true;
+            };
+
+            const removeFromCart = (index) => {
+                const newCart = [...cart];
+                newCart.splice(index, 1);
+                setCart(newCart);
+                showToast('Item removed from cart.', 'info');
+            };
+
+            const updateCartQty = (index, delta) => {
+                const newCart = [...cart];
+                newCart[index].quantity += delta;
+                if (newCart[index].quantity <= 0) {
+                    newCart.splice(index, 1);
+                }
+                setCart(newCart);
+            };
+
+            const filteredProducts = React.useMemo(() => {
+                return products.filter(p => {
+                    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                          p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                          p.category.toLowerCase().includes(searchQuery.toLowerCase());
+                    const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
+                    const matchesBrand = selectedBrand === 'All' || p.brand === selectedBrand;
+                    const matchesGender = selectedGender === 'All' || p.gender === selectedGender || p.gender === 'Unisex';
+                    const matchesPrice = p.price <= priceRange;
+
+                    return matchesSearch && matchesCategory && matchesBrand && matchesGender && matchesPrice;
+                }).sort((a, b) => {
+                    if (sortBy === 'price-low') return a.price - b.price;
+                    if (sortBy === 'price-high') return b.price - a.price;
+                    if (sortBy === 'rating') return b.rating - a.rating;
+                    if (sortBy === 'discount') return b.discount - a.discount;
+                    if (sortBy === 'newest') return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+                    return 0; // relevance
+                });
+            }, [products, searchQuery, selectedCategory, selectedBrand, selectedGender, priceRange, sortBy]);
+
+            const navigateToShopWithCategory = (cat) => {
+                setSelectedCategory(cat);
+                setView('shop');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const openProductDetail = (product) => {
+                setSelectedProduct(product);
+                setView('product-detail');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col bg-slate-100 text-slate-800">
+                    {/* Toast Notification Header */}
+                    {notification && (
+                        <div className={`fixed top-4 right-4 z-50 px-5 py-3 rounded-xl shadow-2xl text-white text-sm font-semibold flex items-center gap-2 transform transition-all duration-300 ${
+                            notification.type === 'success' ? 'bg-emerald-600' : notification.type === 'warning' ? 'bg-amber-600' : 'bg-brand-600'
+                        }`}>
+                            <i data-lucide={notification.type === 'success' ? 'check-circle' : 'info'} className="w-5 h-5"></i>
+                            {notification.message}
+                        </div>
+                    )}
+
+                    {/* Top Promotional Bar */}
+                    <div className="bg-brand-dark text-slate-200 text-xs py-2 px-4 text-center flex justify-between items-center border-b border-slate-800">
+                        <div className="hidden sm:block text-slate-400">⚡ India's Ultimate Sneaker & Sports Hub</div>
+                        <div className="mx-auto sm:mx-0 font-medium tracking-wide">
+                            🔥 Festive Offer: Get Extra <span className="text-amber-400 font-bold">15% OFF</span> with code <span className="bg-amber-400 text-black px-1.5 py-0.5 rounded text-[10px] font-bold">SHOEKART15</span>
+                        </div>
+                        <div className="hidden md:flex gap-4 text-xs text-slate-300">
+                            <span className="hover:underline cursor-pointer" onClick={() => setView('tracking')}>Track Order</span>
+                            <span>|</span>
+                            <span className="hover:underline cursor-pointer" onClick={() => setView('admin')}>Admin Portal</span>
+                        </div>
+                    </div>
+
+                    {/* Navigation Header */}
+                    <header className="sticky top-0 z-40 bg-brand-600 text-white shadow-md">
+                        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                            {/* Logo */}
+                            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setView('home')}>
+                                <div className="bg-white text-brand-600 p-2 rounded-xl shadow-inner font-black text-xl italic tracking-tighter flex items-center">
+                                    SK<span className="text-accent-500 text-2xl">.</span>
+                                </div>
+                                <div>
+                                    <h1 className="text-xl font-extrabold tracking-tight leading-none text-white">ShoeKart</h1>
+                                    <p className="text-[10px] text-blue-200 font-medium">Step Into Your Style</p>
+                                </div>
+                            </div>
+
+                            {/* Search Bar */}
+                            <div className="flex-1 max-w-2xl mx-2 relative">
+                                <input
+                                    type="text"
+                                    placeholder="Search Nike, Adidas, Air Jordan, Running Shoes, Casuals..."
+                                    value={searchQuery}
+                                    onChange={(e) => { setSearchQuery(e.target.value); if(view !== 'shop') setView('shop'); }}
+                                    className="w-full py-2.5 pl-4 pr-11 text-slate-900 bg-white rounded-lg text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 transition"
+                                />
+                                <button 
+                                    onClick={() => setView('shop')}
+                                    className="absolute right-1 top-1/2 -translate-y-1/2 bg-accent-500 hover:bg-accent-600 text-white p-2 rounded-md transition"
+                                >
+                                    <i data-lucide="search" className="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            {/* Right Action Icons */}
+                            <div className="flex items-center gap-3 sm:gap-6">
+                                {/* Login / User Profile */}
+                                {user ? (
+                                    <div className="relative group cursor-pointer" onClick={() => setView('account')}>
+                                        <div className="flex items-center gap-2 bg-brand-700 hover:bg-brand-800 px-3 py-1.5 rounded-lg border border-brand-500">
+                                            <div className="w-7 h-7 rounded-full bg-accent-500 flex items-center justify-center font-bold text-xs text-white">
+                                                {user.name.charAt(0)}
+                                            </div>
+                                            <span className="hidden md:inline text-sm font-semibold">{user.name.split(' ')[0]}</span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={() => setIsAuthModalOpen(true)}
+                                        className="bg-white text-brand-600 hover:bg-blue-50 px-4 py-2 rounded-lg text-sm font-bold shadow transition"
+                                    >
+                                        Login
+                                    </button>
+                                )}
+
+                                {/* Wishlist */}
+                                <button 
+                                    onClick={() => setView('shop')} 
+                                    className="relative flex flex-col items-center hover:text-amber-300 transition"
+                                    title="Wishlist"
+                                >
+                                    <i data-lucide="heart" className="w-6 h-6"></i>
+                                    {wishlist.length > 0 && (
+                                        <span className="absolute -top-1.5 -right-2 bg-accent-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                            {wishlist.length}
+                                        </span>
+                                    )}
+                                    <span className="text-[10px] hidden sm:inline mt-0.5">Wishlist</span>
+                                </button>
+
+                                {/* Cart */}
+                                <button 
+                                    onClick={() => setView('cart')} 
+                                    className="relative flex items-center gap-2 bg-accent-500 hover:bg-accent-600 px-3.5 py-2 rounded-lg text-white font-bold text-sm shadow transition"
+                                >
+                                    <i data-lucide="shopping-cart" className="w-5 h-5"></i>
+                                    <span className="hidden sm:inline">Cart</span>
+                                    {cart.length > 0 && (
+                                        <span className="bg-white text-accent-600 px-1.5 py-0.2 text-xs rounded-full font-black">
+                                            {cart.reduce((a, b) => a + b.quantity, 0)}
+                                        </span>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Category Quick Bar */}
+                        <div className="bg-brand-700 border-t border-brand-500/40 text-xs text-slate-100 overflow-x-auto hide-scrollbar">
+                            <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-6 whitespace-nowrap">
+                                <button className={`hover:text-amber-300 font-semibold ${selectedCategory === 'All' ? 'text-amber-300 border-b-2 border-amber-300' : ''}`} onClick={() => navigateToShopWithCategory('All')}>All Shoes</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => { setSelectedGender('Men'); setView('shop'); }}>Men's Collection</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => { setSelectedGender('Women'); setView('shop'); }}>Women's Collection</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => navigateToShopWithCategory("Kids' Shoes")}>Kids' Shoes</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => navigateToShopWithCategory('Sneakers')}>Sneakers</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => navigateToShopWithCategory('Running Shoes')}>Running Shoes</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => navigateToShopWithCategory('Formal Shoes')}>Formal Shoes</button>
+                                <button className="hover:text-amber-300 font-medium" onClick={() => navigateToShopWithCategory('Sandals & Slippers')}>Sandals & Slippers</button>
+                                <button className="text-amber-300 font-bold hover:underline" onClick={() => setView('shop')}>🔥 Top Brands</button>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Dynamic View Controller */}
+                    <main className="flex-1">
+                        {view === 'home' && (
+                            <HomePage 
+                                products={products} 
+                                onSelectCategory={navigateToShopWithCategory}
+                                onOpenProduct={openProductDetail}
+                                onQuickView={setQuickViewProduct}
+                                toggleWishlist={toggleWishlist}
+                                wishlist={wishlist}
+                                addToCart={addToCart}
+                                setView={setView}
+                            />
+                        )}
+
+                        {view === 'shop' && (
+                            <ShopPage 
+                                products={filteredProducts}
+                                allProducts={products}
+                                selectedCategory={selectedCategory}
+                                setSelectedCategory={setSelectedCategory}
+                                selectedBrand={selectedBrand}
+                                setSelectedBrand={setSelectedBrand}
+                                selectedGender={selectedGender}
+                                setSelectedGender={setSelectedGender}
+                                priceRange={priceRange}
+                                setPriceRange={setPriceRange}
+                                sortBy={sortBy}
+                                setSortBy={setSortBy}
+                                searchQuery={searchQuery}
+                                setSearchQuery={setSearchQuery}
+                                onOpenProduct={openProductDetail}
+                                onQuickView={setQuickViewProduct}
+                                toggleWishlist={toggleWishlist}
+                                wishlist={wishlist}
+                                addToCart={addToCart}
+                            />
+                        )}
+
+                        {view === 'product-detail' && selectedProduct && (
+                            <ProductDetailPage 
+                                product={selectedProduct}
+                                onBack={() => setView('shop')}
+                                addToCart={addToCart}
+                                toggleWishlist={toggleWishlist}
+                                isWishlisted={wishlist.some(w => w.id === selectedProduct.id)}
+                                allProducts={products}
+                                onOpenProduct={openProductDetail}
+                                setView={setView}
+                            />
+                        )}
+
+                        {view === 'cart' && (
+                            <CartPage 
+                                cart={cart}
+                                removeFromCart={removeFromCart}
+                                updateCartQty={updateCartQty}
+                                appliedCoupon={appliedCoupon}
+                                setAppliedCoupon={setAppliedCoupon}
+                                setView={setView}
+                            />
+                        )}
+
+                        {view === 'checkout' && (
+                            <CheckoutPage 
+                                cart={cart}
+                                appliedCoupon={appliedCoupon}
+                                user={user}
+                                onCompleteOrder={(order) => {
+                                    setRecentOrder(order);
+                                    setCart([]);
+                                    setView('tracking');
+                                    showToast('Order placed successfully! 🎉', 'success');
+                                }}
+                                setView={setView}
+                            />
+                        )}
+
+                        {view === 'account' && (
+                            <AccountPage user={user} setUser={setUser} setView={setView} recentOrder={recentOrder} />
+                        )}
+
+                        {view === 'tracking' && (
+                            <TrackingPage order={recentOrder} setView={setView} />
+                        )}
+
+                        {view === 'admin' && (
+                            <AdminDashboard 
+                                products={products} 
+                                setProducts={setProducts} 
+                                showToast={showToast} 
+                            />
+                        )}
+                    </main>
+
+                    {/* Quick View Modal */}
+                    {quickViewProduct && (
+                        <QuickViewModal 
+                            product={quickViewProduct} 
+                            onClose={() => setQuickViewProduct(null)} 
+                            addToCart={addToCart}
+                            onFullView={() => {
+                                openProductDetail(quickViewProduct);
+                                setQuickViewProduct(null);
+                            }}
+                        />
+                    )}
+
+                    {/* Auth Modal */}
+                    {isAuthModalOpen && (
+                        <AuthModal 
+                            onClose={() => setIsAuthModalOpen(false)}
+                            onLogin={(userData) => {
+                                setUser(userData);
+                                localStorage.setItem('shoekart_user', JSON.stringify(userData));
+                                setIsAuthModalOpen(false);
+                                showToast(`Welcome back, ${userData.name}!`, 'success');
+                            }}
+                        />
+                    )}
+
+                    {/* Global Footer */}
+                    <footer className="bg-slate-900 text-slate-400 text-sm mt-12 border-t border-slate-800">
+                        <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="bg-brand-600 text-white px-2.5 py-1 rounded-lg font-black text-lg italic">SK</div>
+                                    <span className="text-xl font-bold text-white tracking-tight">ShoeKart</span>
+                                </div>
+                                <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                                    ShoeKart is India's premier online footwear store. Discover original sneakers, running shoes, formal leather, and casual footwear with express delivery across India.
+                                </p>
+                                <div className="flex items-center gap-3 text-slate-300">
+                                    <div className="p-2 bg-slate-800 rounded-lg"><i data-lucide="shield-check" className="w-5 h-5 text-emerald-400"></i></div>
+                                    <span className="text-xs">100% Authentic Brand Guarantee</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</h3>
+                                <ul className="space-y-2 text-xs">
+                                    <li><button className="hover:text-white transition" onClick={() => setView('shop')}>All Products</button></li>
+                                    <li><button className="hover:text-white transition" onClick={() => navigateToShopWithCategory('Sneakers')}>Trending Sneakers</button></li>
+                                    <li><button className="hover:text-white transition" onClick={() => navigateToShopWithCategory('Running Shoes')}>Sports & Performance</button></li>
+                                    <li><button className="hover:text-white transition" onClick={() => setView('tracking')}>Track Order</button></li>
+                                    <li><button className="hover:text-white transition" onClick={() => setView('admin')}>Seller Admin Portal</button></li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Customer Care</h3>
+                                <ul className="space-y-2 text-xs">
+                                    <li className="hover:text-white cursor-pointer">Help Center & FAQ</li>
+                                    <li className="hover:text-white cursor-pointer">7-Day Easy Returns & Exchange</li>
+                                    <li className="hover:text-white cursor-pointer">Shipping & Delivery Terms</li>
+                                    <li className="hover:text-white cursor-pointer">Indian Shoe Size Chart Guide</li>
+                                    <li className="hover:text-white cursor-pointer">Privacy Policy</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Newsletter & Updates</h3>
+                                <p className="text-xs text-slate-400 mb-3">Subscribe to receive secret discount codes and launch updates.</p>
+                                <div className="flex gap-2">
+                                    <input type="email" placeholder="Enter your email" className="bg-slate-800 text-white px-3 py-2 rounded-lg text-xs flex-1 focus:outline-none focus:ring-1 focus:ring-brand-500" />
+                                    <button className="bg-accent-500 hover:bg-accent-600 text-white px-3 py-2 rounded-lg font-bold text-xs transition">Join</button>
+                                </div>
+                                <div className="mt-4 pt-4 border-t border-slate-800 text-xs flex items-center gap-2">
+                                    <i data-lucide="credit-card" className="w-4 h-4 text-brand-500"></i>
+                                    <span>Accepting UPI, Cards, NetBanking & COD</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-950 py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+                            © 2026 ShoeKart India. All rights reserved. Step Into Your Style.
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        function HomePage({ products, onSelectCategory, onOpenProduct, onQuickView, toggleWishlist, wishlist, addToCart, setView }) {
+            const trendingShoes = products.filter(p => p.isTrending).slice(0, 4);
+            const bestSellers = products.filter(p => p.isBestSeller).slice(0, 4);
+
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            return (
+                <div className="space-y-8">
+                    {/* Hero Section Banner */}
+                    <div className="max-w-7xl mx-auto px-4 pt-4">
+                        <div className="bg-gradient-to-r from-brand-700 via-brand-600 to-indigo-800 rounded-2xl overflow-hidden shadow-xl text-white relative">
+                            <div className="p-8 md:p-12 lg:w-1/2 z-10 relative">
+                                <span className="bg-accent-500 text-white text-xs font-extrabold uppercase px-3 py-1 rounded-full tracking-wider mb-3 inline-block shadow">
+                                    Mega Festive Sale Live
+                                </span>
+                                <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight mb-3">
+                                    STEP INTO YOUR PERFECT PAIR.
+                                </h2>
+                                <p className="text-blue-100 text-sm md:text-base mb-6 leading-relaxed">
+                                    Up to <span className="text-amber-300 font-extrabold text-xl">60% OFF</span> on Nike, Adidas, Puma, Air Jordan, and top international brands. Free express delivery across India.
+                                </p>
+                                <div className="flex flex-wrap gap-3">
+                                    <button 
+                                        onClick={() => setView('shop')}
+                                        className="bg-accent-500 hover:bg-accent-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-accent-500/40 transition duration-200 flex items-center gap-2"
+                                    >
+                                        Shop Entire Collection
+                                        <i data-lucide="arrow-right" className="w-4 h-4"></i>
+                                    </button>
+                                    <button 
+                                        onClick={() => onSelectCategory('Sneakers')}
+                                        className="bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-3 rounded-xl backdrop-blur transition"
+                                    >
+                                        Explore Sneakers
+                                    </button>
+                                </div>
+                            </div>
+                            <img 
+                                src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&auto=format&fit=crop&q=80" 
+                                alt="Hero Shoe"
+                                className="hidden lg:block absolute right-0 top-0 h-full w-1/2 object-cover object-center opacity-85 hover:scale-105 transition duration-700"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Shop By Category Cards */}
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="flex justify-between items-end mb-4">
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-900 tracking-tight">Shop by Category</h2>
+                                <p className="text-xs text-slate-500">Pick the perfect category for your lifestyle</p>
+                            </div>
+                            <button className="text-xs font-bold text-brand-600 hover:underline" onClick={() => setView('shop')}>View All Categories →</button>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                            {[
+                                { name: 'Sneakers', img: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=300&auto=format&fit=crop&q=80' },
+                                { name: 'Running Shoes', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&auto=format&fit=crop&q=80' },
+                                { name: 'Casual Shoes', img: 'https://images.unsplash.com/photo-1539185441755-769473a23570?w=300&auto=format&fit=crop&q=80' },
+                                { name: 'Formal Shoes', img: 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=300&auto=format&fit=crop&q=80' },
+                                { name: 'Sports Shoes', img: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=300&auto=format&fit=crop&q=80' },
+                                { name: 'Walking Shoes', img: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=300&auto=format&fit=crop&q=80' }
+                            ].map((cat) => (
+                                <div 
+                                    key={cat.name} 
+                                    onClick={() => onSelectCategory(cat.name)}
+                                    className="bg-white p-3 rounded-xl shadow-sm border border-slate-200 text-center hover:shadow-md cursor-pointer transition transform hover:-translate-y-1 group"
+                                >
+                                    <div className="w-full h-24 rounded-lg overflow-hidden mb-2 bg-slate-100">
+                                        <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition duration-300" />
+                                    </div>
+                                    <h3 className="text-xs font-bold text-slate-800">{cat.name}</h3>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Popular Brand Strip */}
+                    <div className="bg-white border-y border-slate-200 py-6">
+                        <div className="max-w-7xl mx-auto px-4">
+                            <p className="text-center text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Official Brand Partners</p>
+                            <div className="flex items-center justify-between gap-6 overflow-x-auto hide-scrollbar opacity-75">
+                                {BRANDS.map(brand => (
+                                    <span key={brand} className="text-lg font-black tracking-tight text-slate-700 whitespace-nowrap hover:text-brand-600 transition cursor-pointer" onClick={() => setView('shop')}>
+                                        {brand}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Trending Products */}
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                                    🔥 Trending Now
+                                </h2>
+                                <p className="text-xs text-slate-500">Most sought-after footwear this season</p>
+                            </div>
+                            <button className="text-xs font-bold text-brand-600 hover:underline" onClick={() => setView('shop')}>Explore All →</button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            {trendingShoes.map(p => (
+                                <ProductCard 
+                                    key={p.id} 
+                                    product={p} 
+                                    onOpen={onOpenProduct} 
+                                    onQuickView={onQuickView}
+                                    toggleWishlist={toggleWishlist}
+                                    isWishlisted={wishlist.some(w => w.id === p.id)}
+                                    addToCart={addToCart}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Discount Special Banner */}
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="bg-gradient-to-r from-amber-500 to-accent-600 rounded-2xl p-6 md:p-8 text-white flex flex-col md:flex-row items-center justify-between shadow-lg gap-4">
+                            <div>
+                                <span className="bg-black/20 text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded mb-2 inline-block">Flash Sale</span>
+                                <h3 className="text-2xl font-black tracking-tight">Minimum 30% OFF on Top Running Shoes</h3>
+                                <p className="text-amber-100 text-xs mt-1">Includes Nike Air Zoom, Adidas Ultraboost, and Asics GEL series.</p>
+                            </div>
+                            <button onClick={() => onSelectCategory('Running Shoes')} className="bg-white text-slate-900 font-extrabold px-6 py-3 rounded-xl shadow hover:bg-slate-100 transition whitespace-nowrap">
+                                Claim Discounts Now
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Best Sellers */}
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-900 tracking-tight">⭐ Best Sellers</h2>
+                                <p className="text-xs text-slate-500">Top customer rated favorites</p>
+                            </div>
+                            <button className="text-xs font-bold text-brand-600 hover:underline" onClick={() => setView('shop')}>See All →</button>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                            {bestSellers.map(p => (
+                                <ProductCard 
+                                    key={p.id} 
+                                    product={p} 
+                                    onOpen={onOpenProduct} 
+                                    onQuickView={onQuickView}
+                                    toggleWishlist={toggleWishlist}
+                                    isWishlisted={wishlist.some(w => w.id === p.id)}
+                                    addToCart={addToCart}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ProductCard({ product, onOpen, onQuickView, toggleWishlist, isWishlisted, addToCart }) {
+            const [selectedSize, setSelectedSize] = React.useState(null);
+
+            return (
+                <div className="product-card bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition duration-200 flex flex-col justify-between relative group">
+                    {/* Badge */}
+                    <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                        {product.discount > 0 && (
+                            <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                                {product.discount}% OFF
+                            </span>
+                        )}
+                        {product.isNew && (
+                            <span className="bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                                NEW
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Wishlist Icon */}
+                    <button 
+                        onClick={(e) => { e.stopPropagation(); toggleWishlist(product); }}
+                        className={`absolute top-2 right-2 z-10 p-2 rounded-full backdrop-blur-md transition ${
+                            isWishlisted ? 'bg-rose-500 text-white' : 'bg-white/80 text-slate-600 hover:text-rose-500'
+                        }`}
+                    >
+                        <i data-lucide="heart" className="w-4 h-4 fill-current"></i>
+                    </button>
+
+                    {/* Image */}
+                    <div className="relative w-full h-48 bg-slate-50 overflow-hidden cursor-pointer" onClick={() => onOpen(product)}>
+                        <img 
+                            src={product.images[0]} 
+                            alt={product.name} 
+                            className="product-img w-full h-full object-cover transition duration-500" 
+                        />
+                        {/* Quick view button overlay */}
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); onQuickView(product); }}
+                                className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-lg shadow hover:bg-slate-100 transition"
+                            >
+                                Quick View
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-3.5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div className="text-[11px] font-extrabold uppercase text-slate-400 tracking-wider mb-0.5">{product.brand}</div>
+                            <h3 
+                                onClick={() => onOpen(product)}
+                                className="text-xs font-bold text-slate-800 line-clamp-1 hover:text-brand-600 cursor-pointer mb-1"
+                            >
+                                {product.name}
+                            </h3>
+
+                            {/* Ratings */}
+                            <div className="flex items-center gap-1.5 mb-2">
+                                <span className="bg-emerald-600 text-white text-[10px] font-extrabold px-1.5 py-0.2 rounded flex items-center gap-0.5">
+                                    {product.rating} <i data-lucide="star" className="w-2.5 h-2.5 fill-white"></i>
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-medium">({product.reviewCount})</span>
+                            </div>
+
+                            {/* Price */}
+                            <div className="flex items-baseline gap-2 mb-3">
+                                <span className="text-base font-extrabold text-slate-900">₹{product.price.toLocaleString('en-IN')}</span>
+                                {product.originalPrice > product.price && (
+                                    <span className="text-xs text-slate-400 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                                )}
+                            </div>
+
+                            {/* Size selection */}
+                            <div className="mb-3">
+                                <span className="text-[10px] font-semibold text-slate-500 block mb-1">Select Size (UK):</span>
+                                <div className="flex flex-wrap gap-1">
+                                    {product.sizes.map(sz => (
+                                        <button 
+                                            key={sz}
+                                            onClick={() => setSelectedSize(sz)}
+                                            className={`text-[10px] w-6 h-6 rounded font-semibold border ${
+                                                selectedSize === sz 
+                                                ? 'bg-brand-600 text-white border-brand-600' 
+                                                : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-400'
+                                            }`}
+                                        >
+                                            {sz}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={() => addToCart(product, selectedSize, product.colors[0])}
+                            className="w-full bg-brand-50 hover:bg-brand-600 text-brand-600 hover:text-white border border-brand-200 text-xs font-bold py-2 rounded-lg transition duration-200 flex items-center justify-center gap-1.5"
+                        >
+                            <i data-lucide="shopping-bag" className="w-3.5 h-3.5"></i>
+                            Add To Cart
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function ShopPage({ 
+            products, allProducts, selectedCategory, setSelectedCategory, 
+            selectedBrand, setSelectedBrand, selectedGender, setSelectedGender, 
+            priceRange, setPriceRange, sortBy, setSortBy, searchQuery, setSearchQuery, 
+            onOpenProduct, onQuickView, toggleWishlist, wishlist, addToCart 
+        }) {
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            return (
+                <div className="max-w-7xl mx-auto px-4 py-6">
+                    {/* Header bar */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div>
+                            <h2 className="text-xl font-extrabold text-slate-900">
+                                {selectedCategory === 'All' ? 'Shoe Catalog' : selectedCategory} 
+                                <span className="text-xs text-slate-400 font-normal ml-2">({products.length} Products found)</span>
+                            </h2>
+                            {searchQuery && (
+                                <p className="text-xs text-brand-600 mt-1">Showing search results for "{searchQuery}"</p>
+                            )}
+                        </div>
+
+                        {/* Sort selector */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-slate-500">Sort By:</span>
+                            <select 
+                                value={sortBy} 
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="bg-slate-50 border border-slate-200 text-slate-800 text-xs rounded-lg py-2 px-3 font-semibold focus:outline-none focus:ring-1 focus:ring-brand-500"
+                            >
+                                <option value="relevance">Popularity / Relevance</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="rating">Highest Rated</option>
+                                <option value="discount">Biggest Discount</option>
+                                <option value="newest">Newest Arrivals</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row gap-6">
+                        {/* Sidebar Filters */}
+                        <aside className="w-full lg:w-64 bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit space-y-6">
+                            <div className="flex items-center justify-between border-b pb-3">
+                                <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
+                                    <i data-lucide="sliders-horizontal" className="w-4 h-4"></i> Filters
+                                </h3>
+                                <button 
+                                    onClick={() => {
+                                        setSelectedCategory('All');
+                                        setSelectedBrand('All');
+                                        setSelectedGender('All');
+                                        setPriceRange(20000);
+                                        setSearchQuery('');
+                                    }}
+                                    className="text-xs text-brand-600 hover:underline font-semibold"
+                                >
+                                    Reset All
+                                </button>
+                            </div>
+
+                            {/* Gender Filter */}
+                            <div>
+                                <label className="text-xs font-extrabold uppercase text-slate-400 tracking-wider block mb-2">Gender</label>
+                                <div className="space-y-1.5 text-xs">
+                                    {['All', 'Men', 'Women', 'Kids', 'Unisex'].map(g => (
+                                        <label key={g} className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                                            <input 
+                                                type="radio" 
+                                                name="gender" 
+                                                checked={selectedGender === g}
+                                                onChange={() => setSelectedGender(g)}
+                                                className="text-brand-600 focus:ring-brand-500"
+                                            />
+                                            <span>{g}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Category Filter */}
+                            <div>
+                                <label className="text-xs font-extrabold uppercase text-slate-400 tracking-wider block mb-2">Category</label>
+                                <select 
+                                    value={selectedCategory} 
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 font-medium text-slate-800"
+                                >
+                                    {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                </select>
+                            </div>
+
+                            {/* Brand Filter */}
+                            <div>
+                                <label className="text-xs font-extrabold uppercase text-slate-400 tracking-wider block mb-2">Brand</label>
+                                <div className="max-h-40 overflow-y-auto space-y-1.5 text-xs hide-scrollbar">
+                                    <label className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                                        <input 
+                                            type="radio" 
+                                            name="brand" 
+                                            checked={selectedBrand === 'All'}
+                                            onChange={() => setSelectedBrand('All')}
+                                            className="text-brand-600 focus:ring-brand-500"
+                                        />
+                                        <span>All Brands</span>
+                                    </label>
+                                    {BRANDS.map(b => (
+                                        <label key={b} className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                                            <input 
+                                                type="radio" 
+                                                name="brand" 
+                                                checked={selectedBrand === b}
+                                                onChange={() => setSelectedBrand(b)}
+                                                className="text-brand-600 focus:ring-brand-500"
+                                            />
+                                            <span>{b}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Price Slider */}
+                            <div>
+                                <div className="flex justify-between items-center text-xs mb-1">
+                                    <label className="font-extrabold uppercase text-slate-400 tracking-wider">Max Price</label>
+                                    <span className="font-bold text-slate-900">₹{priceRange.toLocaleString('en-IN')}</span>
+                                </div>
+                                <input 
+                                    type="range" 
+                                    min="1000" 
+                                    max="20000" 
+                                    step="500"
+                                    value={priceRange}
+                                    onChange={(e) => setPriceRange(Number(e.target.value))}
+                                    className="w-full accent-brand-600 cursor-pointer"
+                                />
+                            </div>
+                        </aside>
+
+                        {/* Product Grid */}
+                        <div className="flex-1">
+                            {products.length === 0 ? (
+                                <div className="bg-white p-12 text-center rounded-xl border border-slate-200">
+                                    <i data-lucide="package-open" className="w-16 h-16 text-slate-300 mx-auto mb-3"></i>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-1">No shoes match your filter!</h3>
+                                    <p className="text-xs text-slate-500 mb-4">Try clearing filters or search terms to see available footwear.</p>
+                                    <button 
+                                        onClick={() => {
+                                            setSelectedCategory('All');
+                                            setSelectedBrand('All');
+                                            setSelectedGender('All');
+                                            setPriceRange(20000);
+                                            setSearchQuery('');
+                                        }}
+                                        className="bg-brand-600 text-white font-bold text-xs px-5 py-2.5 rounded-lg hover:bg-brand-700 transition"
+                                    >
+                                        Clear All Filters
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                    {products.map(p => (
+                                        <ProductCard 
+                                            key={p.id} 
+                                            product={p} 
+                                            onOpen={onOpenProduct} 
+                                            onQuickView={onQuickView}
+                                            toggleWishlist={toggleWishlist}
+                                            isWishlisted={wishlist.some(w => w.id === p.id)}
+                                            addToCart={addToCart}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function ProductDetailPage({ product, onBack, addToCart, toggleWishlist, isWishlisted, allProducts, onOpenProduct, setView }) {
+            const [selectedImage, setSelectedImage] = React.useState(product.images[0]);
+            const [selectedSize, setSelectedSize] = React.useState(null);
+            const [selectedColor, setSelectedColor] = React.useState(product.colors[0]);
+            const [pincode, setPincode] = React.useState('');
+            const [deliveryMsg, setDeliveryMsg] = React.useState(null);
+
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            }, [product]);
+
+            const checkPincode = () => {
+                if (pincode.length === 6 && /^\d+$/.test(pincode)) {
+                    setDeliveryMsg(`Standard Express delivery available to ${pincode} by ${new Date(Date.now() + 3*86400000).toDateString().slice(0, 10)}`);
+                } else {
+                    setDeliveryMsg("Please enter a valid 6-digit Indian PIN code.");
+                }
+            };
+
+            const similarProducts = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+
+            return (
+                <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
+                    <button onClick={onBack} className="text-xs font-bold text-slate-600 hover:text-brand-600 flex items-center gap-1">
+                        ← Back to Catalog
+                    </button>
+
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Images preview gallery */}
+                        <div className="space-y-4">
+                            <div className="w-full h-96 bg-slate-50 rounded-xl overflow-hidden border border-slate-200">
+                                <img src={selectedImage} alt={product.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex gap-2">
+                                {product.images.map((img, idx) => (
+                                    <div 
+                                        key={idx} 
+                                        onClick={() => setSelectedImage(img)}
+                                        className={`w-20 h-20 rounded-lg overflow-hidden border-2 cursor-pointer ${
+                                            selectedImage === img ? 'border-brand-600' : 'border-slate-200 hover:border-slate-400'
+                                        }`}
+                                    >
+                                        <img src={img} alt="thumbnail" className="w-full h-full object-cover" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Product details panel */}
+                        <div className="space-y-5">
+                            <div>
+                                <span className="text-xs font-black uppercase tracking-wider text-slate-400">{product.brand}</span>
+                                <h1 className="text-2xl font-black text-slate-900 mt-0.5">{product.name}</h1>
+                                <div className="flex items-center gap-3 mt-2">
+                                    <span className="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                                        {product.rating} ★
+                                    </span>
+                                    <span className="text-xs text-slate-500 font-semibold">{product.reviewCount} Ratings & Verified Reviews</span>
+                                </div>
+                            </div>
+
+                            {/* Pricing */}
+                            <div className="flex items-baseline gap-3 border-y border-slate-100 py-3">
+                                <span className="text-3xl font-black text-slate-900">₹{product.price.toLocaleString('en-IN')}</span>
+                                {product.originalPrice > product.price && (
+                                    <>
+                                        <span className="text-sm text-slate-400 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                                        <span className="text-xs font-bold text-emerald-600">{product.discount}% OFF</span>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Color Selection */}
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 block mb-2">Available Colors:</label>
+                                <div className="flex gap-2">
+                                    {product.colors.map(col => (
+                                        <button 
+                                            key={col} 
+                                            onClick={() => setSelectedColor(col)}
+                                            className={`text-xs px-3 py-1.5 rounded-lg border font-medium ${
+                                                selectedColor === col ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-50 text-slate-700 hover:border-slate-400'
+                                            }`}
+                                        >
+                                            {col}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Size Selection */}
+                            <div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="text-xs font-bold text-slate-700">Select UK Size:</label>
+                                    <span className="text-[10px] text-brand-600 hover:underline cursor-pointer font-bold">Size Guide</span>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {product.sizes.map(sz => (
+                                        <button 
+                                            key={sz}
+                                            onClick={() => setSelectedSize(sz)}
+                                            className={`w-10 h-10 rounded-lg text-xs font-bold border transition ${
+                                                selectedSize === sz 
+                                                ? 'bg-brand-600 text-white border-brand-600 shadow' 
+                                                : 'bg-white text-slate-800 border-slate-200 hover:border-brand-500'
+                                            }`}
+                                        >
+                                            UK {sz}
+                                        </button>
+                                    ))}
+                                </div>
+                                {!selectedSize && (
+                                    <p className="text-[11px] text-amber-600 font-semibold mt-1"> Please pick a size to proceed to purchase.</p>
+                                )}
+                            </div>
+
+                            {/* PIN Code Delivery Check */}
+                            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <label className="text-xs font-bold text-slate-700 block mb-1">Check Delivery & Services</label>
+                                <div className="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Enter PIN Code" 
+                                        value={pincode} 
+                                        onChange={(e) => setPincode(e.target.value)}
+                                        className="text-xs px-3 py-1.5 bg-white border border-slate-200 rounded-lg flex-1 focus:outline-none" 
+                                    />
+                                    <button onClick={checkPincode} className="bg-slate-800 text-white text-xs font-bold px-4 py-1.5 rounded-lg hover:bg-slate-900">Check</button>
+                                </div>
+                                {deliveryMsg && <p className="text-xs mt-2 text-slate-600 font-medium">{deliveryMsg}</p>}
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-4 pt-2">
+                                <button 
+                                    onClick={() => addToCart(product, selectedSize, selectedColor)}
+                                    className="flex-1 bg-accent-500 hover:bg-accent-600 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2"
+                                >
+                                    <i data-lucide="shopping-cart" className="w-5 h-5"></i>
+                                    Add To Cart
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        if (addToCart(product, selectedSize, selectedColor)) {
+                                            setView('checkout');
+                                        }
+                                    }}
+                                    className="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2"
+                                >
+                                    <i data-lucide="zap" className="w-5 h-5"></i>
+                                    Buy Now
+                                </button>
+                                <button 
+                                    onClick={() => toggleWishlist(product)}
+                                    className={`p-3.5 rounded-xl border transition ${isWishlisted ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'}`}
+                                >
+                                    <i data-lucide="heart" className="w-5 h-5 fill-current"></i>
+                                </button>
+                            </div>
+
+                            {/* Description */}
+                            <div className="border-t border-slate-100 pt-4">
+                                <h4 className="text-xs font-bold uppercase text-slate-400 mb-1">Product Highlights</h4>
+                                <p className="text-xs text-slate-600 leading-relaxed">{product.description}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Similar Products */}
+                    {similarProducts.length > 0 && (
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-4">You Might Also Like</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                                {similarProducts.map(p => (
+                                    <ProductCard 
+                                        key={p.id} 
+                                        product={p} 
+                                        onOpen={onOpenProduct} 
+                                        onQuickView={() => {}} 
+                                        toggleWishlist={toggleWishlist}
+                                        isWishlisted={false}
+                                        addToCart={addToCart}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function CartPage({ cart, removeFromCart, updateCartQty, appliedCoupon, setAppliedCoupon, setView }) {
+            const [couponInput, setCouponInput] = React.useState('');
+            const [couponMsg, setCouponMsg] = React.useState('');
+
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const originalSubtotal = cart.reduce((acc, item) => acc + (item.originalPrice * item.quantity), 0);
+            const totalDiscount = originalSubtotal - subtotal;
+            
+            let couponDiscount = 0;
+            if (appliedCoupon === 'SHOEKART15') couponDiscount = subtotal * 0.15;
+            if (appliedCoupon === 'FIRSTPAIR') couponDiscount = 500;
+
+            const deliveryFee = subtotal > 1999 || cart.length === 0 ? 0 : 99;
+            const finalTotal = Math.max(0, subtotal - couponDiscount + deliveryFee);
+
+            const handleApplyCoupon = () => {
+                if (couponInput.toUpperCase() === 'SHOEKART15') {
+                    setAppliedCoupon('SHOEKART15');
+                    setCouponMsg('Coupon applied! 15% discount applied.');
+                } else if (couponInput.toUpperCase() === 'FIRSTPAIR') {
+                    setAppliedCoupon('FIRSTPAIR');
+                    setCouponMsg('Coupon applied! Flat ₹500 discount applied.');
+                } else {
+                    setCouponMsg('Invalid Coupon Code.');
+                }
+            };
+
+            if (cart.length === 0) {
+                return (
+                    <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+                        <div className="bg-white p-12 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                            <i data-lucide="shopping-cart" className="w-20 h-20 text-slate-300 mx-auto"></i>
+                            <h2 className="text-2xl font-bold text-slate-800">Your ShoeKart Bag is Empty!</h2>
+                            <p className="text-xs text-slate-500">Looks like you haven't added any footwear to your bag yet.</p>
+                            <button onClick={() => setView('shop')} className="bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm px-6 py-3 rounded-xl shadow transition">
+                                Start Shopping Now
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+                    <h2 className="text-2xl font-black text-slate-900">Shopping Cart ({cart.length} Items)</h2>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Cart items list */}
+                        <div className="lg:col-span-2 space-y-3">
+                            {cart.map((item, idx) => (
+                                <div key={idx} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div className="flex items-center gap-4 w-full sm:w-auto">
+                                        <img src={item.images[0]} alt={item.name} className="w-20 h-20 object-cover rounded-lg bg-slate-100" />
+                                        <div>
+                                            <span className="text-[10px] font-extrabold uppercase text-slate-400">{item.brand}</span>
+                                            <h3 className="text-sm font-bold text-slate-800 line-clamp-1">{item.name}</h3>
+                                            <p className="text-xs text-slate-500 mt-0.5">Size: <span className="font-bold text-slate-800">UK {item.size}</span> | Color: {item.selectedColor}</p>
+                                            <div className="flex items-baseline gap-2 mt-1">
+                                                <span className="text-sm font-bold text-slate-900">₹{item.price.toLocaleString('en-IN')}</span>
+                                                {item.originalPrice > item.price && (
+                                                    <span className="text-xs text-slate-400 line-through">₹{item.originalPrice.toLocaleString('en-IN')}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-6 w-full sm:w-auto justify-between">
+                                        {/* Quantity */}
+                                        <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden">
+                                            <button onClick={() => updateCartQty(idx, -1)} className="px-2.5 py-1 text-slate-600 hover:bg-slate-100 font-bold text-xs">-</button>
+                                            <span className="px-3 py-1 text-xs font-bold text-slate-800 bg-slate-50">{item.quantity}</span>
+                                            <button onClick={() => updateCartQty(idx, 1)} className="px-2.5 py-1 text-slate-600 hover:bg-slate-100 font-bold text-xs">+</button>
+                                        </div>
+
+                                        <button onClick={() => removeFromCart(idx)} className="text-slate-400 hover:text-rose-600 transition">
+                                            <i data-lucide="trash-2" className="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Order Summary sidebar */}
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit space-y-4">
+                            <h3 className="text-sm font-bold uppercase text-slate-400 tracking-wider">Price Details</h3>
+                            
+                            <div className="space-y-2 text-xs text-slate-600 pb-3 border-b border-slate-100">
+                                <div className="flex justify-between">
+                                    <span>Price ({cart.length} items)</span>
+                                    <span>₹{originalSubtotal.toLocaleString('en-IN')}</span>
+                                </div>
+                                <div className="flex justify-between text-emerald-600 font-medium">
+                                    <span>Discount</span>
+                                    <span>-₹{totalDiscount.toLocaleString('en-IN')}</span>
+                                </div>
+                                {couponDiscount > 0 && (
+                                    <div className="flex justify-between text-emerald-600 font-medium">
+                                        <span>Coupon Discount ({appliedCoupon})</span>
+                                        <span>-₹{couponDiscount.toLocaleString('en-IN')}</span>
+                                    </div>
+                                )}
+                                <div className="flex justify-between">
+                                    <span>Delivery Charges</span>
+                                    <span>{deliveryFee === 0 ? <span className="text-emerald-600 font-bold">FREE</span> : `₹${deliveryFee}`}</span>
+                                </div>
+                            </div>
+
+                            {/* Coupon Input */}
+                            <div>
+                                <label className="text-[11px] font-bold text-slate-600 block mb-1">Apply Coupon Code</label>
+                                <div className="flex gap-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="e.g. SHOEKART15" 
+                                        value={couponInput}
+                                        onChange={(e) => setCouponInput(e.target.value)}
+                                        className="text-xs px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg flex-1 focus:outline-none uppercase" 
+                                    />
+                                    <button onClick={handleApplyCoupon} className="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-slate-800">Apply</button>
+                                </div>
+                                {couponMsg && <p className="text-[11px] mt-1 text-emerald-600 font-semibold">{couponMsg}</p>}
+                            </div>
+
+                            <div className="flex justify-between items-center text-base font-black text-slate-900 pt-2 border-t">
+                                <span>Total Amount</span>
+                                <span>₹{Math.round(finalTotal).toLocaleString('en-IN')}</span>
+                            </div>
+
+                            <button 
+                                onClick={() => setView('checkout')}
+                                className="w-full bg-accent-500 hover:bg-accent-600 text-white font-extrabold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2"
+                            >
+                                Proceed To Checkout
+                                <i data-lucide="arrow-right" className="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function CheckoutPage({ cart, appliedCoupon, user, onCompleteOrder, setView }) {
+            const [step, setStep] = React.useState('address');
+            const [address, setAddress] = React.useState({
+                fullName: user ? user.name : '',
+                phone: '',
+                pincode: '',
+                addressLine: '',
+                city: '',
+                state: 'Gujarat'
+            });
+            const [paymentMethod, setPaymentMethod] = React.useState('upi');
+
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            let couponDiscount = 0;
+            if (appliedCoupon === 'SHOEKART15') couponDiscount = subtotal * 0.15;
+            if (appliedCoupon === 'FIRSTPAIR') couponDiscount = 500;
+            const finalTotal = Math.max(0, subtotal - couponDiscount);
+
+            const handlePlaceOrder = (e) => {
+                e.preventDefault();
+                const newOrder = {
+                    id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                    date: new Date().toLocaleDateString(),
+                    items: cart,
+                    address,
+                    paymentMethod,
+                    total: finalTotal,
+                    status: 'Processing'
+                };
+                onCompleteOrder(newOrder);
+            };
+
+            return (
+                <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+                    <h2 className="text-2xl font-black text-slate-900">Secure Checkout</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2 space-y-6">
+                            {/* Step 1: Address */}
+                            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-4">
+                                    <span className="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs">1</span>
+                                    Delivery Address
+                                </h3>
+
+                                <form className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                    <div>
+                                        <label className="font-semibold text-slate-600 block mb-1">Full Name</label>
+                                        <input required type="text" value={address.fullName} onChange={e=>setAddress({...address, fullName: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="John Doe" />
+                                    </div>
+                                    <div>
+                                        <label className="font-semibold text-slate-600 block mb-1">Phone Number</label>
+                                        <input required type="text" value={address.phone} onChange={e=>setAddress({...address, phone: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="9876543210" />
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <label className="font-semibold text-slate-600 block mb-1">Flat / House No. / Street</label>
+                                        <input required type="text" value={address.addressLine} onChange={e=>setAddress({...address, addressLine: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="House 42, Park Avenue" />
+                                    </div>
+                                    <div>
+                                        <label className="font-semibold text-slate-600 block mb-1">PIN Code</label>
+                                        <input required type="text" value={address.pincode} onChange={e=>setAddress({...address, pincode: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="361001" />
+                                    </div>
+                                    <div>
+                                        <label className="font-semibold text-slate-600 block mb-1">City</label>
+                                        <input required type="text" value={address.city} onChange={e=>setAddress({...address, city: e.target.value})} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="Jamnagar" />
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* Step 2: Payment Method */}
+                            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-4">
+                                    <span className="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs">2</span>
+                                    Payment Mode
+                                </h3>
+
+                                <div className="space-y-2 text-xs">
+                                    {[
+                                        { id: 'upi', name: 'UPI (Google Pay, PhonePe, Paytm)', desc: 'Instant 0% transaction fee' },
+                                        { id: 'cod', name: 'Cash On Delivery (COD)', desc: 'Pay cash when shoes arrive' },
+                                        { id: 'card', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, RuPay' },
+                                        { id: 'netbanking', name: 'NetBanking', desc: 'All Indian Banks' }
+                                    ].map(pm => (
+                                        <label key={pm.id} className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition ${paymentMethod === pm.id ? 'border-brand-600 bg-brand-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
+                                            <input type="radio" name="payment" checked={paymentMethod === pm.id} onChange={() => setPaymentMethod(pm.id)} className="mt-0.5 text-brand-600" />
+                                            <div>
+                                                <div className="font-bold text-slate-800">{pm.name}</div>
+                                                <div className="text-[11px] text-slate-500">{pm.desc}</div>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Summary & Confirm */}
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm h-fit space-y-4">
+                            <h3 className="text-sm font-bold uppercase text-slate-400">Order Summary</h3>
+                            <div className="text-xs space-y-2 pb-3 border-b">
+                                <div className="flex justify-between">
+                                    <span>Subtotal</span>
+                                    <span>₹{subtotal.toLocaleString('en-IN')}</span>
+                                </div>
+                                <div className="flex justify-between text-emerald-600">
+                                    <span>Coupons</span>
+                                    <span>-₹{couponDiscount.toLocaleString('en-IN')}</span>
+                                </div>
+                                <div className="flex justify-between font-bold text-slate-900 text-sm pt-2">
+                                    <span>Payable Total</span>
+                                    <span>₹{Math.round(finalTotal).toLocaleString('en-IN')}</span>
+                                </div>
+                            </div>
+
+                            <button onClick={handlePlaceOrder} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl shadow transition text-center">
+                                Complete Order & Pay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function TrackingPage({ order, setView }) {
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            if (!order) {
+                return (
+                    <div className="max-w-xl mx-auto px-4 py-16 text-center">
+                        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                            <i data-lucide="truck" className="w-12 h-12 text-slate-300 mx-auto"></i>
+                            <h2 className="text-lg font-bold text-slate-800">No recent orders found</h2>
+                            <p className="text-xs text-slate-500">You haven't placed an order in this session yet.</p>
+                            <button onClick={() => setView('shop')} className="bg-brand-600 text-white text-xs font-bold px-4 py-2 rounded-lg">Shop Shoes</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+                    <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                        <div className="flex justify-between items-start border-b pb-4">
+                            <div>
+                                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">Order Confirmed</span>
+                                <h2 className="text-xl font-black text-slate-900 mt-1">Order #{order.id}</h2>
+                                <p className="text-xs text-slate-500">Placed on {order.date}</p>
+                            </div>
+                            <span className="text-base font-extrabold text-slate-900">₹{order.total.toLocaleString('en-IN')}</span>
+                        </div>
+
+                        {/* Progress Stepper */}
+                        <div className="grid grid-cols-4 text-center text-xs relative">
+                            {['Order Placed', 'Packed', 'Shipped', 'Delivered'].map((st, i) => (
+                                <div key={st} className="flex flex-col items-center">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs mb-1 ${i <= 1 ? 'bg-brand-600 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                                        {i + 1}
+                                    </div>
+                                    <span className="font-semibold text-slate-700">{st}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Ordered Items */}
+                        <div>
+                            <h3 className="text-xs font-bold text-slate-400 uppercase mb-3">Order Items</h3>
+                            <div className="space-y-2">
+                                {order.items.map((item, i) => (
+                                    <div key={i} className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg text-xs">
+                                        <img src={item.images[0]} className="w-12 h-12 object-cover rounded" />
+                                        <div className="flex-1">
+                                            <div className="font-bold text-slate-800">{item.name}</div>
+                                            <div className="text-slate-500">Size: UK {item.size} | Qty: {item.quantity}</div>
+                                        </div>
+                                        <div className="font-bold text-slate-900">₹{(item.price * item.quantity).toLocaleString('en-IN')}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AccountPage({ user, setUser, setView, recentOrder }) {
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            if (!user) {
+                return (
+                    <div className="max-w-md mx-auto px-4 py-16 text-center">
+                        <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                            <i data-lucide="user-x" className="w-12 h-12 text-slate-300 mx-auto"></i>
+                            <h2 className="text-lg font-bold text-slate-800">You are not logged in</h2>
+                            <button onClick={() => setView('home')} className="bg-brand-600 text-white text-xs font-bold px-4 py-2 rounded-lg">Return to Home</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 rounded-full bg-brand-600 text-white font-extrabold text-2xl flex items-center justify-center">
+                                {user.name.charAt(0)}
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-black text-slate-900">{user.name}</h2>
+                                <p className="text-xs text-slate-500">{user.email}</p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={() => {
+                                setUser(null);
+                                localStorage.removeItem('shoekart_user');
+                                setView('home');
+                            }}
+                            className="bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg transition"
+                        >
+                            Logout
+                        </button>
+                    </div>
+
+                    {/* Saved Addresses / Order Info */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 className="text-sm font-bold text-slate-800 mb-2">Saved Default Delivery Address</h3>
+                            <p className="text-xs text-slate-600 leading-relaxed">
+                                {user.name}<br />
+                                102, Skyline Towers, Park Road<br />
+                                Jamnagar, Gujarat - 361001<br />
+                                Phone: +91 98765 43210
+                            </p>
+                        </div>
+
+                        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                            <h3 className="text-sm font-bold text-slate-800 mb-2">Recent Session Orders</h3>
+                            {recentOrder ? (
+                                <div className="text-xs space-y-1">
+                                    <div className="font-bold text-brand-600">Order #{recentOrder.id}</div>
+                                    <div className="text-slate-500">Status: {recentOrder.status}</div>
+                                    <button onClick={() => setView('tracking')} className="text-xs text-slate-800 font-bold hover:underline">Track Delivery →</button>
+                                </div>
+                            ) : (
+                                <p className="text-xs text-slate-400">No order placed in current session.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function QuickViewModal({ product, onClose, addToCart, onFullView }) {
+            const [selectedSize, setSelectedSize] = React.useState(null);
+
+            return (
+                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+                        <button onClick={onClose} className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-800">
+                            <i data-lucide="x" className="w-5 h-5"></i>
+                        </button>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <img src={product.images[0]} alt={product.name} className="w-full h-64 object-cover rounded-xl bg-slate-50" />
+                            <div className="space-y-4">
+                                <div>
+                                    <span className="text-[10px] font-black uppercase text-slate-400">{product.brand}</span>
+                                    <h3 className="text-lg font-bold text-slate-900">{product.name}</h3>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <span className="text-xs font-bold text-emerald-600">{product.rating} ★</span>
+                                        <span className="text-xs text-slate-400">({product.reviewCount} reviews)</span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-2xl font-black text-slate-900">₹{product.price.toLocaleString('en-IN')}</span>
+                                    <span className="text-xs text-slate-400 line-through">₹{product.originalPrice.toLocaleString('en-IN')}</span>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-semibold text-slate-600 block mb-1">Select Size (UK):</label>
+                                    <div className="flex flex-wrap gap-1">
+                                        {product.sizes.map(sz => (
+                                            <button 
+                                                key={sz}
+                                                onClick={() => setSelectedSize(sz)}
+                                                className={`text-xs w-7 h-7 rounded font-bold border ${selectedSize === sz ? 'bg-brand-600 text-white' : 'bg-slate-50'}`}
+                                            >
+                                                {sz}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 pt-2">
+                                    <button 
+                                        onClick={() => {
+                                            if (addToCart(product, selectedSize, product.colors[0])) onClose();
+                                        }}
+                                        className="w-full bg-accent-500 hover:bg-accent-600 text-white font-bold py-2.5 rounded-xl shadow transition text-xs"
+                                    >
+                                        Add To Cart
+                                    </button>
+                                    <button onClick={onFullView} className="w-full bg-slate-100 text-slate-800 font-bold py-2 rounded-xl text-xs hover:bg-slate-200">
+                                        View Full Details Page
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AuthModal({ onClose, onLogin }) {
+            const [isSignup, setIsSignup] = React.useState(false);
+            const [email, setEmail] = React.useState('');
+            const [name, setName] = React.useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                onLogin({ name: name || 'Demo Shopper', email: email || 'shopper@shoekart.com' });
+            };
+
+            return (
+                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl max-w-sm w-full p-6 relative shadow-2xl">
+                        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-800">✕</button>
+                        <h2 className="text-xl font-black text-slate-900 mb-1">{isSignup ? 'Create ShoeKart Account' : 'Login to ShoeKart'}</h2>
+                        <p className="text-xs text-slate-500 mb-4">Access your orders, wishlist, and recommendations</p>
+
+                        <form onSubmit={handleSubmit} className="space-y-3 text-xs">
+                            {isSignup && (
+                                <div>
+                                    <label className="font-semibold text-slate-600 block mb-1">Full Name</label>
+                                    <input required type="text" value={name} onChange={e=>setName(e.target.value)} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="Rahul Sharma" />
+                                </div>
+                            )}
+                            <div>
+                                <label className="font-semibold text-slate-600 block mb-1">Email or Mobile</label>
+                                <input required type="email" value={email} onChange={e=>setEmail(e.target.value)} className="w-full p-2 border border-slate-200 rounded-lg" placeholder="rahul@gmail.com" />
+                            </div>
+                            <div>
+                                <label className="font-semibold text-slate-600 block mb-1">Password</label>
+                                <input required type="password" className="w-full p-2 border border-slate-200 rounded-lg" placeholder="••••••••" />
+                            </div>
+
+                            <button type="submit" className="w-full bg-brand-600 text-white font-bold py-2.5 rounded-lg hover:bg-brand-700 transition">
+                                {isSignup ? 'Sign Up' : 'Login'}
+                            </button>
+                        </form>
+
+                        <div className="mt-4 text-center text-xs text-slate-500">
+                            {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
+                            <button onClick={() => setIsSignup(!isSignup)} className="text-brand-600 font-bold hover:underline">
+                                {isSignup ? 'Login' : 'Sign Up'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AdminDashboard({ products, setProducts, showToast }) {
+            const [tab, setTab] = React.useState('analytics');
+            const [newShoe, setNewShoe] = React.useState({
+                name: '', brand: 'Nike', category: 'Running Shoes', gender: 'Men',
+                price: '', originalPrice: '', sizes: '6,7,8,9,10',
+                image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format&fit=crop&q=80',
+                description: 'High performance sports shoe'
+            });
+
+            React.useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+
+                if (tab === 'analytics') {
+                    const ctx = document.getElementById('salesChart');
+                    if (ctx) {
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                datasets: [{
+                                    label: 'Monthly Sales (in ₹ Lakhs)',
+                                    data: [12, 19, 15, 25, 22, 30],
+                                    borderColor: '#2563eb',
+                                    tension: 0.3
+                                }]
+                            }
+                        });
+                    }
+                }
+            }, [tab]);
+
+            const handleAddProduct = (e) => {
+                e.preventDefault();
+                const p = {
+                    id: 'sk-' + (products.length + 101),
+                    name: newShoe.name,
+                    brand: newShoe.brand,
+                    category: newShoe.category,
+                    gender: newShoe.gender,
+                    price: Number(newShoe.price),
+                    originalPrice: Number(newShoe.originalPrice || newShoe.price),
+                    discount: Math.round(((newShoe.originalPrice - newShoe.price) / newShoe.originalPrice) * 100) || 0,
+                    rating: 4.5,
+                    reviewCount: 1,
+                    sizes: newShoe.sizes.split(',').map(s => Number(s.trim())),
+                    colors: ["Black", "White"],
+                    images: [newShoe.image],
+                    inStock: true,
+                    stockCount: 20,
+                    isNew: true,
+                    isTrending: false,
+                    isBestSeller: false,
+                    description: newShoe.description
+                };
+                setProducts([p, ...products]);
+                showToast(`New Shoe "${p.name}" added successfully!`, 'success');
+            };
+
+            const handleDelete = (id) => {
+                setProducts(products.filter(p => p.id !== id));
+                showToast('Product deleted from inventory', 'info');
+            };
+
+            return (
+                <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+                    <div className="flex justify-between items-center bg-slate-900 text-white p-6 rounded-2xl shadow">
+                        <div>
+                            <h2 className="text-xl font-extrabold">ShoeKart Seller & Admin Dashboard</h2>
+                            <p className="text-xs text-slate-400">Manage catalog inventory, prices, orders, and coupons</p>
+                        </div>
+                        <div className="flex gap-2 text-xs font-bold">
+                            {['analytics', 'inventory', 'add-product'].map(t => (
+                                <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-lg capitalize ${tab === t ? 'bg-brand-600 text-white' : 'bg-slate-800 text-slate-300'}`}>
+                                    {t.replace('-', ' ')}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {tab === 'analytics' && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm md:col-span-2">
+                                <h3 className="text-sm font-bold text-slate-800 mb-4">Revenue Trends</h3>
+                                <canvas id="salesChart" height="120"></canvas>
+                            </div>
+                            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                                <h3 className="text-sm font-bold text-slate-800">Quick Stats</h3>
+                                <div className="p-3 bg-brand-50 rounded-lg">
+                                    <div className="text-xs text-brand-600 font-bold">Total Products</div>
+                                    <div className="text-2xl font-black text-slate-900">{products.length}</div>
+                                </div>
+                                <div className="p-3 bg-emerald-50 rounded-lg">
+                                    <div className="text-xs text-emerald-600 font-bold">Active Orders</div>
+                                    <div className="text-2xl font-black text-slate-900">142</div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {tab === 'inventory' && (
+                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+                            <table className="w-full text-left text-xs text-slate-600">
+                                <thead className="bg-slate-50 uppercase font-bold text-slate-400 border-b">
+                                    <tr>
+                                        <th className="p-3">Shoe</th>
+                                        <th className="p-3">Brand</th>
+                                        <th className="p-3">Price</th>
+                                        <th className="p-3">Category</th>
+                                        <th className="p-3">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {products.map(p => (
+                                        <tr key={p.id} className="border-b hover:bg-slate-50">
+                                            <td className="p-3 font-bold text-slate-800 flex items-center gap-2">
+                                                <img src={p.images[0]} className="w-8 h-8 rounded object-cover" />
+                                                {p.name}
+                                            </td>
+                                            <td className="p-3">{p.brand}</td>
+                                            <td className="p-3 font-bold">₹{p.price.toLocaleString('en-IN')}</td>
+                                            <td className="p-3">{p.category}</td>
+                                            <td className="p-3">
+                                                <button onClick={() => handleDelete(p.id)} className="text-rose-600 hover:underline font-bold">Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+
+                    {tab === 'add-product' && (
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm max-w-2xl mx-auto">
+                            <h3 className="text-base font-bold text-slate-900 mb-4">Add New Shoe to Catalog</h3>
+                            <form onSubmit={handleAddProduct} className="grid grid-cols-2 gap-3 text-xs">
+                                <div className="col-span-2">
+                                    <label className="font-bold text-slate-600 block mb-1">Shoe Name</label>
+                                    <input required type="text" value={newShoe.name} onChange={e=>setNewShoe({...newShoe, name: e.target.value})} className="w-full p-2 border rounded-lg" placeholder="e.g. Revolution 6 Running Shoes" />
+                                </div>
+                                <div>
+                                    <label className="font-bold text-slate-600 block mb-1">Brand</label>
+                                    <select value={newShoe.brand} onChange={e=>setNewShoe({...newShoe, brand: e.target.value})} className="w-full p-2 border rounded-lg">
+                                        {BRANDS.map(b => <option key={b} value={b}>{b}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="font-bold text-slate-600 block mb-1">Category</label>
+                                    <select value={newShoe.category} onChange={e=>setNewShoe({...newShoe, category: e.target.value})} className="w-full p-2 border rounded-lg">
+                                        {CATEGORIES.filter(c => c !== 'All').map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="font-bold text-slate-600 block mb-1">Selling Price (₹)</label>
+                                    <input required type="number" value={newShoe.price} onChange={e=>setNewShoe({...newShoe, price: e.target.value})} className="w-full p-2 border rounded-lg" placeholder="2999" />
+                                </div>
+                                <div>
+                                    <label className="font-bold text-slate-600 block mb-1">Original Price (₹)</label>
+                                    <input required type="number" value={newShoe.originalPrice} onChange={e=>setNewShoe({...newShoe, originalPrice: e.target.value})} className="w-full p-2 border rounded-lg" placeholder="4999" />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="font-bold text-slate-600 block mb-1">Image URL</label>
+                                    <input required type="text" value={newShoe.image} onChange={e=>setNewShoe({...newShoe, image: e.target.value})} className="w-full p-2 border rounded-lg" />
+                                </div>
+                                <button type="submit" className="col-span-2 bg-brand-600 text-white font-bold py-2.5 rounded-lg hover:bg-brand-700">
+                                    Save Product
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
